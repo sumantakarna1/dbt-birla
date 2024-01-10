@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+  - name: src
+    database: sourcedb
+    schema: mk_mall
+    tables:
+    - name: customers
+      columns:
+        - name: c_custkey
+          tests:
+            - unique
+    - name: nations
+    - name: regions
+      columns: 
+      - name: r_regionkey
+        tests:
+          - unique
+          - not_null
+      - name: r_name
+        tests:
+          - accepted_values:
+             values: ['ASIA','AFRICA','AMERICA','EUROPE','MIDDLE EAST', 'SOUTHEAST']
+             schema: SCH_ERROR
+
+    - name: orders
+      loaded_at_field: o_orderdate::timestamp
+      freshness:
+        warn_after: {count: 1, period: day} 
+        error_after: {count: 2, period: day} 
+
+    - name: suppliers
+    - name: parts
+    - name: lineitems
+    - name: partsupps
